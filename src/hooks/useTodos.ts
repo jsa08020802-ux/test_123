@@ -20,10 +20,13 @@ export function useTodos() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
   }, [todos])
 
-  function addTodo(text: string) {
+  function addTodo(text: string, dueDate?: string) {
     const trimmed = text.trim()
     if (!trimmed) return
-    setTodos((prev) => [...prev, { id: crypto.randomUUID(), text: trimmed, done: false }])
+    setTodos((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), text: trimmed, done: false, dueDate: dueDate || undefined },
+    ])
   }
 
   function toggleTodo(id: string) {
@@ -32,10 +35,14 @@ export function useTodos() {
     )
   }
 
-  function editTodo(id: string, text: string) {
+  function editTodo(id: string, text: string, dueDate?: string) {
     const trimmed = text.trim()
     if (!trimmed) return
-    setTodos((prev) => prev.map((todo) => (todo.id === id ? { ...todo, text: trimmed } : todo)))
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, text: trimmed, dueDate: dueDate || undefined } : todo,
+      ),
+    )
   }
 
   function deleteTodo(id: string) {
